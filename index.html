@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelPartner - Find City Travel Partners</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+    <style>
+                    body.night-mode {
+                        background: #181818 !important;
+                        color: #e0e0e0 !important;
+                    }
+                    body.night-mode .container,
+                    body.night-mode .search-card,
+                    body.night-mode .add-partner-section,
+                    body.night-mode .modal-content,
+                    body.night-mode .filter-section {
+                        background: #232323 !important;
+                        color: #e0e0e0 !important;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.7) !important;
+                    }
+                    body.night-mode .partner-card {
+                        background: #232323 !important;
+                        color: #e0e0e0 !important;
+                    }
+                    body.night-mode .btn, body.night-mode .btn-small, body.night-mode .btn-secondary {
+                        background: linear-gradient(135deg, #232323 0%, #333 100%) !important;
+                        color: #e0e0e0 !important;
+                    }
+                    body.night-mode input, body.night-mode select {
+                        background: #181818 !important;
+                        color: #e0e0e0 !important;
+                        border-color: #444 !important;
+                    }
+                    body.night-mode label {
+                        color: #e0e0e0 !important;
+                    }
+                    body.night-mode .results-header {
+                        color: #e0e0e0 !important;
+                    }
+                .info-box-message, .info-heading { transition: background 0.3s, color 0.3s; }
+                body.night-mode .info-box-message, body.night-mode .info-heading {
+                    background: #232323 !important;
+                    color: #e0e0e0 !important;
+                }
+                .btn-small {
+                    padding: 5px 15px;
+                }
+                .btn-secondary {
+                    background: #6c757d;
+                }
+                .btn-margin-top {
+                    margin-top: 15px;
+                }
+                #filterSection {
+                    display: none;
+                }
+                /* Mobile-first improvements */
+                @media (max-width: 600px) {
+                    body {
+                        padding: 5px;
+                    }
+                    .container {
+                        padding: 0 2px;
+                    }
+                    .header h1 {
+                        font-size: 1.5rem;
+                    }
+                    .header p {
+                        font-size: 1rem;
+                    }
+                    .search-card, .add-partner-section, .modal-content {
+                        padding: 10px;
+                        border-radius: 8px;
+                    }
+                    .form-row {
+                        grid-template-columns: 1fr;
+                        gap: 10px;
+                    }
+                    .partners-grid {
+                        grid-template-columns: 1fr;
+                        gap: 10px;
+                    }
+                    .partner-card {
+                        padding: 10px;
+                        border-radius: 8px;
+                    }
+                    .results-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 8px;
+                    }
+                    .filter-section {
+                        padding: 8px;
+                        border-radius: 8px;
+                    }
+                    .fee-filter input {
+                        width: 100%;
+                    }
+                    .modal-content {
+                        max-width: 95vw;
+                    }
+                    label, .partner-name, .city-pair, .fee, .partner-details {
+                        font-size: 0.95rem;
+                    }
+                    .btn, .btn-small, .btn-secondary, .btn-margin-top {
+                        font-size: 0.95rem;
+                        padding: 8px 12px;
+                    }
+                }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Search Form */
+        .search-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Results */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls label {
+            margin-bottom: 0;
+        }
+
+        .fee-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fee-filter input {
+            width: 120px;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .partner-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .partner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .partner-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .partner-rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        .route-info {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .city-pair {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .fee {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #28a745;
+            margin: 10px 0;
+        }
+
+        .partner-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+
+        .contact-btn {
+            background: #667eea;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .contact-btn:hover {
+            background: #5a67d8;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        /* Add Partner Form */
+        .add-partner-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .add-partner-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .partners-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar for Hindi View and Night Mode -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 18px; padding: 10px 0 6px 0;">
+        <!-- Hindi View (Hash Tag) -->
+        <span id="hindiToggle" title="View in Hindi" style="font-size: 1.5rem; cursor: pointer;">
+            #<span style="font-size: 1.1rem; margin-left: 2px; vertical-align: middle;">हिंदी</span>
+        </span>
+        <!-- Night Mode (Moon Icon) -->
+        <span id="nightToggle" title="Night Mode" style="font-size: 1.5rem; cursor: pointer;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><path d="M21 12.79A9 9 0 0111.21 3c-.5 0-.67.64-.25.91A7 7 0 1019.09 13c.27.42.91.25.91-.21z" fill="#333"/></svg>
+        </span>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 TravelPartner</h1>
+            <p>Find travel partners between cities with minimum fees</p>
+        </div>
+
+        <!-- Customer/Provider Upload Section -->
+        <div class="add-partner-section">
+            <h3>🚗 Upload Your Trip (Customer/Provider)</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="personName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Start City</label>
+                    <select id="startCity" title="Start City">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>End City</label>
+                    <select id="endCity" title="End City">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Distance (km)</label>
+                    <input type="number" id="distance" min="1" placeholder="Distance">
+                </div>
+                <div class="form-group">
+                    <label>Vehicle Type</label>
+                    <select id="vehicleType" title="Vehicle Type">
+                        <option value="">Select</option>
+                        <option value="2 Wheeler">2 Wheeler</option>
+                        <option value="4 Wheeler">4 Wheeler</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="mobile" placeholder="Mobile Number">
+                </div>
+                <div class="form-group">
+                    <label>Day</label>
+                    <select id="day" title="Day">
+                        <option value="">Select</option>
+                        <option value="Today">Today</option>
+                        <option value="Tomorrow">Tomorrow</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Timing</label>
+                    <input type="text" id="timing" placeholder="e.g. 10:00 AM">
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender" title="Gender">
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" min="1" placeholder="Age">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="role" title="Role">
+                        <option value="">Select</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Provider">Provider</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn" onclick="addPerson()">➕ Upload Trip</button>
+                </div>
+            </div>
+            <div id="personMessage"></div>
+        </div>
+
+        <!-- Lists Section -->
+                <!-- Important Info Box Above Customer List -->
+        <div class="add-partner-section" style="margin-bottom: 0;">
+                    <h3 class="info-heading" style="color: #333;">Read this carefully<br><span style="font-size:1rem; color:#764ba2;">(इसे ध्यान से पढ़ें)</span></h3>
+                    <div class="info-box-message" style="font-size: 1rem; color: #333;">
+                        <span class="en-msg">
+                            <strong>Do you want to travel from one city to another for free or at a very low cost?</strong><br>
+                            This website is not ready yet — it is in process and will be available soon.<br><br>
+                            If you want to travel to your city send direct message on instagram with all above information , please join our pilot project and contribute your support!<br>
+                            Follow and share all information on Instagram. We will contact you for your free journey. and you can earn 5 rupee/km or if you give free ride then you can earn 10 rupee/km worth credit and u can use this credit for future trips for free . <br>
+                            We act as a bridge between service providers and customers. For your security, we verify both through Aadhaar and a video call.<br>
+                            if you are frontned / backend or full stake web developer or android devloper pease contect us
+                        </span>
+                        <span class="hi-msg" style="display:none;">
+                            <strong>क्या आप एक शहर से दूसरे शहर की यात्रा फ्री में या बहुत कम कीमत पर करना चाहते हैं?</strong><br>
+                            यह वेबसाइट अभी तैयार नहीं है — यह प्रक्रिया में है और जल्द ही उपलब्ध होगी।<br><br>
+                            यदि आप अपने शहर की यात्रा करना चाहते हैं तो ऊपर दी गई सभी जानकारी के साथ इंस्टाग्राम पर सीधा संदेश भेजें, कृपया हमारे पायलट प्रोजेक्ट में शामिल हों और अपना समर्थन दें!<br>
+                            इंस्टाग्राम पर सभी जानकारी साझा करें। हम आपसे आपकी मुफ्त यात्रा के लिए संपर्क करेंगे। आप 5 रुपये/किमी कमा सकते हैं या यदि आप मुफ्त सवारी देते हैं तो आप 10 रुपये/किमी का क्रेडिट कमा सकते हैं और इस क्रेडिट का उपयोग भविष्य की यात्राओं के लिए मुफ्त में कर सकते हैं।<br>
+                            हम सेवा प्रदाताओं और ग्राहकों के बीच एक पुल के रूप में कार्य करते हैं। आपकी सुरक्षा के लिए, हम दोनों का आधार और वीडियो कॉल के माध्यम से सत्यापन करते हैं।<br>
+                            यदि आप फ्रंटएंड/बैकएंड या फुल स्टैक वेब डेवलपर या एंड्रॉइड डेवलपर हैं तो कृपया हमसे संपर्क करें
+                        </span>
+                        <br><br>
+                        <a id="instagramBtn" href="https://www.instagram.com/dushyantkumar0202?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="display: inline-block; margin-top: 12px; background: linear-gradient(45deg, #fd5949, #d6249f, #285AEB); color: white; padding: 10px 22px; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 1rem; transition: background 0.2s, transform 0.2s;">
+                            <span style="vertical-align: middle; display: inline-block; margin-right: 8px;">
+                                <svg width="20" height="20" viewBox="0 0 448 512" fill="white" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 114.9-114.9S287.7 141 224.1 141zm0 186c-39.5 0-71.5-32-71.5-71.5s32-71.5 71.5-71.5 71.5 32 71.5 71.5-32 71.5-71.5 71.5zm146.4-194.3c0 14.9-12 26.9-26.9 26.9s-26.9-12-26.9-26.9 12-26.9 26.9-26.9 26.9 12 26.9 26.9zm76.1 27.2c-1.7-35.3-9.9-66.7-36.2-92.9S388.6 9.7 353.3 8C317.8 6.3 298.7 6 224 6s-93.8.3-129.3 2C59.4 9.7 28 17.9 1.7 44.2S9.7 123.4 8 158.7C6.3 194.2 6 213.3 6 288s.3 93.8 2 129.3c1.7 35.3 9.9 66.7 36.2 92.9s57.6 34.5 92.9 36.2C130.2 505.7 149.3 506 224 506s93.8-.3 129.3-2c35.3-1.7 66.7-9.9 92.9-36.2s34.5-57.6 36.2-92.9c1.7-35.5 2-54.6 2-129.3s-.3-93.8-2-129.3z"/></svg>
+                            </span>
+                            Follow on Instagram
+                        </a>
+                    </div>
+                </div>
+        <!-- Info Box Section -->
+        <!-- ...existing code... -->
+        <div class="add-partner-section">
+            <h3>👥 Customer List</h3>
+            <div id="customerList"></div>
+        </div>
+        <div class="add-partner-section">
+            <h3>🧑‍💼 Provider List</h3>
+            <div id="providerList"></div>
+        </div>
+
+        <!-- Admin Section -->
+        <div class="add-partner-section">
+            <h3>🔒 Admin View (All Entries)</h3>
+            <div id="adminList"></div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-card">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>From City</label>
+                    <select id="fromCity">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>To City</label>
+                    <select id="toCity">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn" onclick="searchPartners()">🔍 Search Partners</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-header">
+            <h2>Available Travel Partners</h2>
+            <span id="resultCount"></span>
+        </div>
+
+        <div class="filter-section" id="filterSection" style="display: none;">
+            <div class="filter-controls">
+                <label>Filter by fee:</label>
+                <div class="fee-filter">
+                    <span>Min: $0</span>
+                    <input type="range" id="feeSlider" min="0" max="200" value="200" step="10">
+                    <span>Max: $<span id="feeValue">200</span></span>
+                </div>
+                <button class="btn btn-small" onclick="applyFeeFilter()">Apply</button>
+                <button class="btn btn-small btn-secondary" onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+
+        <div id="results" class="partners-grid">
+            <!-- Results will appear here -->
+        </div>
+
+        <!-- Add Partner Section -->
+        <div class="add-partner-section">
+            <h3>✈️ List Yourself as a Travel Partner</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="partnerName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>From City</label>
+                    <select id="newFromCity">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>To City</label>
+                    <select id="newToCity">
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fee ($)</label>
+                    <input type="number" id="fee" placeholder="Amount in USD" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Contact Info</label>
+                    <input type="text" id="contact" placeholder="Email or Phone">
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn" onclick="addPartner()">➕ Add as Partner</button>
+                </div>
+            </div>
+            <div id="addMessage"></div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3>Contact Information</h3>
+            <p id="modalContact"></p>
+            <button class="btn" onclick="closeModal()" style="margin-top: 15px;">Close</button>
+        </div>
+    </div>
+
+    <script>
+                    // Hindi/English toggle for info box
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const hindiToggle = document.getElementById('hindiToggle');
+                        if (hindiToggle) {
+                            hindiToggle.addEventListener('click', function() {
+                                const enMsg = document.querySelector('.info-box-message .en-msg');
+                                const hiMsg = document.querySelector('.info-box-message .hi-msg');
+                                if (enMsg && hiMsg) {
+                                    if (enMsg.style.display === 'none') {
+                                        enMsg.style.display = '';
+                                        hiMsg.style.display = 'none';
+                                    } else {
+                                        enMsg.style.display = 'none';
+                                        hiMsg.style.display = '';
+                                    }
+                                }
+                            });
+                        }
+                    });
+            // Night mode and Hindi toggle
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('nightToggle').onclick = function() {
+                    document.body.classList.toggle('night-mode');
+                };
+                // Hindi toggle
+                let hindiActive = false;
+                const translations = {
+                    'Find travel partners between cities with minimum fees': 'न्यूनतम शुल्क के साथ शहरों के बीच यात्रा साथी खोजें',
+                    'Upload Your Trip (Customer/Provider)': 'अपनी यात्रा अपलोड करें (ग्राहक/प्रदाता)',
+                    'Name': 'नाम',
+                    'Start City': 'प्रारंभ शहर',
+                    'End City': 'अंतिम शहर',
+                    'Distance (km)': 'दूरी (किमी)',
+                    'Vehicle Type': 'वाहन प्रकार',
+                    'Mobile Number': 'मोबाइल नंबर',
+                    'Day': 'दिन',
+                    'Timing': 'समय',
+                    'Gender': 'लिंग',
+                    'Age': 'आयु',
+                    'Role': 'भूमिका',
+                    'Select city': 'शहर चुनें',
+                    'Select': 'चुनें',
+                    'Today': 'आज',
+                    'Tomorrow': 'कल',
+                    'Male': 'पुरुष',
+                    'Female': 'महिला',
+                    'Customer': 'ग्राहक',
+                    'Provider': 'प्रदाता',
+                    'Upload Trip': 'यात्रा अपलोड करें',
+                    'Customer List': 'ग्राहक सूची',
+                    'Provider List': 'प्रदाता सूची',
+                    'Admin View (All Entries)': 'प्रशासन दृश्य (सभी प्रविष्टियाँ)',
+                    'From City': 'प्रारंभ शहर',
+                    'To City': 'अंतिम शहर',
+                    'Search Partners': 'साथी खोजें',
+                    'Available Travel Partners': 'उपलब्ध यात्रा साथी',
+                    'Filter by fee:': 'शुल्क द्वारा फ़िल्टर करें:',
+                    'Min: $0': 'न्यूनतम: ₹0',
+                    'Max: $': 'अधिकतम: ₹',
+                    'Apply': 'लागू करें',
+                    'Reset': 'रीसेट करें',
+                    'No customers yet.': 'अभी तक कोई ग्राहक नहीं।',
+                    'No providers yet.': 'अभी तक कोई प्रदाता नहीं।',
+                    'No entries yet.': 'अभी तक कोई प्रविष्टि नहीं।',
+                    'No partners found for this route. Be the first to list yourself!': 'इस मार्ग के लिए कोई साथी नहीं मिला। सबसे पहले खुद को सूचीबद्ध करें!',
+                    'List Yourself as a Travel Partner': 'अपने आप को यात्रा साथी के रूप में सूचीबद्ध करें',
+                    'Your Name': 'आपका नाम',
+                    'From City': 'प्रारंभ शहर',
+                    'To City': 'अंतिम शहर',
+                    'Fee ($)': 'शुल्क (₹)',
+                    'Contact Info': 'संपर्क जानकारी',
+                    'Add as Partner': 'साथी जोड़ें',
+                    'Contact Information': 'संपर्क जानकारी',
+                    'Close': 'बंद करें',
+                    'Read this carefully': 'इसे ध्यान से पढ़ें',
+                    'This website is not ready yet — it is in process and will be available soon.': 'यह वेबसाइट अभी तैयार नहीं है — यह प्रक्रिया में है और जल्द ही उपलब्ध होगी।',
+                    'If you want to travel to your city send direct message on instagram with all above information , please join our pilot project and contribute your support!': 'यदि आप अपने शहर की यात्रा करना चाहते हैं तो ऊपर दी गई सभी जानकारी के साथ इंस्टाग्राम पर सीधा संदेश भेजें, कृपया हमारे पायलट प्रोजेक्ट में शामिल हों और अपना समर्थन दें!',
+                    'Follow and share all information on Instagram. We will contact you for your free journey. and you can earn 5 rupee/km or if you give free ride then you can earn 10 rupee/km worth credit and u can use this credit for future trips for free .': 'इंस्टाग्राम पर सभी जानकारी साझा करें। हम आपसे आपकी मुफ्त यात्रा के लिए संपर्क करेंगे। आप 5 रुपये/किमी कमा सकते हैं या यदि आप मुफ्त सवारी देते हैं तो आप 10 रुपये/किमी का क्रेडिट कमा सकते हैं और इस क्रेडिट का उपयोग भविष्य की यात्राओं के लिए मुफ्त में कर सकते हैं।',
+                    'We act as a bridge between service providers and customers. For your security, we verify both through Aadhaar and a video call.': 'हम सेवा प्रदाताओं और ग्राहकों के बीच एक पुल के रूप में कार्य करते हैं। आपकी सुरक्षा के लिए, हम दोनों का आधार और वीडियो कॉल के माध्यम से सत्यापन करते हैं।',
+                    'if you are frontned / backend or full stake web developer or android devloper pease contect us': 'यदि आप फ्रंटएंड/बैकएंड या फुल स्टैक वेब डेवलपर या एंड्रॉइड डेवलपर हैं तो कृपया हमसे संपर्क करें',
+                    'Follow on Instagram': 'इंस्टाग्राम पर फॉलो करें',
+                    'Tap for Mobile': 'मोबाइल के लिए टैप करें',
+                    'Trip uploaded successfully!': 'यात्रा सफलतापूर्वक अपलोड हो गई!',
+                    'Please fill all fields': 'कृपया सभी फ़ील्ड भरें',
+                    'Partner added successfully! You can now be found in searches.': 'साथी सफलतापूर्वक जोड़ा गया! अब आप खोज में पाए जा सकते हैं।',
+                    'Fee cannot be negative': 'शुल्क नकारात्मक नहीं हो सकता',
+                    'Please select both cities': 'कृपया दोनों शहर चुनें',
+                    'partners found': 'साथी मिले',
+                    'Contact Partner': 'संपर्क करें',
+                    'Experience: Premium Partner': 'अनुभव: प्रीमियम साथी',
+                    'Experience: Verified Partner': 'अनुभव: सत्यापित साथी',
+                    'Experience: Trusted Partner': 'अनुभव: विश्वसनीय साथी',
+                };
+                const originalTexts = new Map();
+                function translateToHindi() {
+                    document.querySelectorAll('h1, h2, h3, label, button, span, p, div, a, input[placeholder], select option').forEach(el => {
+                        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+                            const text = el.textContent.trim();
+                            if (translations[text]) {
+                                if (!originalTexts.has(el)) originalTexts.set(el, text);
+                                el.textContent = translations[text];
+                            }
+                        }
+                        if (el.placeholder && translations[el.placeholder]) {
+                            if (!originalTexts.has(el)) originalTexts.set(el, el.placeholder);
+                            el.placeholder = translations[el.placeholder];
+                        }
+                    });
+                }
+                function translateToEnglish() {
+                    document.querySelectorAll('h1, h2, h3, label, button, span, p, div, a, input[placeholder], select option').forEach(el => {
+                        if (originalTexts.has(el)) {
+                            if (el.placeholder) {
+                                el.placeholder = originalTexts.get(el);
+                            } else {
+                                el.textContent = originalTexts.get(el);
+                            }
+                        }
+                    });
+                }
+                document.getElementById('hindiToggle').onclick = function() {
+                    hindiActive = !hindiActive;
+                    if (hindiActive) {
+                        translateToHindi();
+                    } else {
+                        translateToEnglish();
+                    }
+                };
+            });
+        // Sample cities
+        const cities = [
+            "Raipur", "Bhilai", "Durg", "Bilaspur", "Korba", "Rajnandgaon", "Jagdalpur", "Ambikapur", "Raigarh", "Dhamtari", "Kanker", "Kawardha", "Janjgir", "Mahasamund", "Dongargarh", "Bemetara", "Balod", "Baloda Bazar", "Balrampur", "Bastar", "Bijapur", "Gariaband", "Jashpur", "Kondagaon", "Mungeli", "Narayanpur", "Sukma", "Surajpur", "Surguja", "Gaurela-Pendra-Marwahi", "Sarangarh-Bilaigarh", "Manendragarh-Chirmiri-Bharatpur", "Mohla-Manpur-Ambagarh Chowki"
+        ];
+
+        // Data for customer/provider
+        let people = [];
+
+        // Sample partners data
+        let partners = [
+            {
+                id: 1,
+                name: "John Davis",
+                from: "New York",
+                to: "Los Angeles",
+                fee: 50,
+                contact: "john@example.com",
+                rating: 4.8
+            },
+            {
+                id: 2,
+                name: "Sarah Wilson",
+                from: "New York",
+                to: "Chicago",
+                fee: 35,
+                contact: "sarah@example.com",
+                rating: 4.9
+            },
+            {
+                id: 3,
+                name: "Mike Johnson",
+                from: "Los Angeles",
+                to: "San Francisco",
+                fee: 45,
+                contact: "mike@example.com",
+                rating: 4.7
+            },
+            {
+                id: 4,
+                name: "Emma Brown",
+                from: "London",
+                to: "Paris",
+                fee: 60,
+                contact: "emma@example.com",
+                rating: 5.0
+            },
+            {
+                id: 5,
+                name: "Alex Chen",
+                from: "Tokyo",
+                to: "Singapore",
+                fee: 75,
+                contact: "alex@example.com",
+                rating: 4.6
+            },
+            {
+                id: 6,
+                name: "Lisa Anderson",
+                from: "Chicago",
+                to: "Dallas",
+                fee: 40,
+                contact: "lisa@example.com",
+                rating: 4.8
+            },
+            {
+                id: 7,
+                name: "Robert Taylor",
+                from: "New York",
+                to: "Boston",
+                fee: 30,
+                contact: "robert@example.com",
+                rating: 4.5
+            }
+        ];
+
+        let currentResults = [];
+        let currentFeeFilter = 200;
+
+        // Populate city dropdowns
+        function populateCities() {
+            const dropdowns = ['fromCity', 'toCity', 'newFromCity', 'newToCity', 'startCity', 'endCity'];
+            dropdowns.forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                if (!dropdown) return;
+                dropdown.innerHTML = '<option value="">Select city</option>';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    dropdown.appendChild(option);
+                });
+            });
+        }
+
+        // Add person (customer/provider)
+        function addPerson() {
+            const name = document.getElementById('personName').value;
+            const startCity = document.getElementById('startCity').value;
+            const endCity = document.getElementById('endCity').value;
+            const distance = document.getElementById('distance').value;
+            const vehicleType = document.getElementById('vehicleType').value;
+            const mobile = document.getElementById('mobile').value;
+            const day = document.getElementById('day').value;
+            const timing = document.getElementById('timing').value;
+            const gender = document.getElementById('gender').value;
+            const age = document.getElementById('age').value;
+            const role = document.getElementById('role').value;
+
+            if (!name || !startCity || !endCity || !distance || !vehicleType || !mobile || !day || !timing || !gender || !age || !role) {
+                document.getElementById('personMessage').innerHTML = '<div class="success" style="background: #f8d7da; color: #721c24;">Please fill all fields</div>';
+                setTimeout(() => { document.getElementById('personMessage').innerHTML = ''; }, 3000);
+                return;
+            }
+
+            const entry = {
+                id: people.length + 1,
+                name, startCity, endCity, distance, vehicleType, mobile, day, timing, gender, age, role
+            };
+            people.push(entry);
+
+            // Clear form
+            document.getElementById('personName').value = '';
+            document.getElementById('startCity').value = '';
+            document.getElementById('endCity').value = '';
+            document.getElementById('distance').value = '';
+            document.getElementById('vehicleType').value = '';
+            document.getElementById('mobile').value = '';
+            document.getElementById('day').value = '';
+            document.getElementById('timing').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('role').value = '';
+
+            document.getElementById('personMessage').innerHTML = '<div class="success">✅ Trip uploaded successfully!</div>';
+            setTimeout(() => { document.getElementById('personMessage').innerHTML = ''; }, 3000);
+
+            renderLists();
+        }
+
+        // Render customer/provider/admin lists
+        function renderLists() {
+            // Customer List
+            const customers = people.filter(p => p.role === 'Customer');
+            document.getElementById('customerList').innerHTML = customers.length === 0 ? '<div>No customers yet.</div>' :
+                customers.map(p => renderPersonCard(p, false)).join('');
+
+            // Provider List
+            const providers = people.filter(p => p.role === 'Provider');
+            document.getElementById('providerList').innerHTML = providers.length === 0 ? '<div>No providers yet.</div>' :
+                providers.map(p => renderPersonCard(p, false)).join('');
+
+            // Admin List
+            document.getElementById('adminList').innerHTML = people.length === 0 ? '<div>No entries yet.</div>' :
+                people.map(p => renderPersonCard(p, true)).join('');
+        }
+
+        // Render a person card
+        function renderPersonCard(person, isAdmin) {
+            return `<div class="partner-card" style="margin-bottom:10px;">
+                <div><b>${person.role}</b> - ${person.name} (${person.gender}, Age: ${person.age})</div>
+                <div>From: ${person.startCity} → To: ${person.endCity}</div>
+                <div>Distance: ${person.distance} km | Vehicle: ${person.vehicleType}</div>
+                <div>Day: ${person.day} | Time: ${person.timing}</div>
+                ${isAdmin ? `<div style='color:#d9534f'><b>Mobile:</b> ${person.mobile}</div>` : `<button class="contact-btn" onclick="alert('Mobile: ${person.mobile}')">Tap for Mobile</button>`}
+            </div>`;
+        }
+
+        // Initial render
+        renderLists();
+
+        // Search partners
+        function searchPartners() {
+            const fromCity = document.getElementById('fromCity').value;
+            const toCity = document.getElementById('toCity').value;
+
+            if (!fromCity || !toCity) {
+                alert('Please select both cities');
+                return;
+            }
+
+            currentResults = partners.filter(partner => 
+                partner.from === fromCity && partner.to === toCity
+            );
+
+            displayResults(currentResults);
+            document.getElementById('filterSection').style.display = 'block';
+        }
+
+        // Display results
+        function displayResults(partnersToShow) {
+            const resultsDiv = document.getElementById('results');
+            const resultCount = document.getElementById('resultCount');
+            
+            resultCount.textContent = `${partnersToShow.length} partners found`;
+            
+            if (partnersToShow.length === 0) {
+                resultsDiv.innerHTML = '<div class="no-results">No partners found for this route. Be the first to list yourself!</div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = partnersToShow.map(partner => `
+                <div class="partner-card">
+                    <div class="partner-header">
+                        <div class="partner-name">${partner.name}</div>
+                        <div class="partner-rating">⭐ ${partner.rating}</div>
+                    </div>
+                    <div class="route-info">
+                        <div class="city-pair">✈️ ${partner.from} → ${partner.to}</div>
+                    </div>
+                    <div class="fee">💰 $${partner.fee}</div>
+                    <div class="partner-details">
+                        🎯 Experience: ${partner.rating >= 4.8 ? 'Premium Partner' : partner.rating >= 4.5 ? 'Verified Partner' : 'Trusted Partner'}
+                    </div>
+                    <button class="contact-btn" onclick="showContact(${partner.id})">📞 Contact Partner</button>
+                </div>
+            `).join('');
+        }
+
+        // Apply fee filter
+        function applyFeeFilter() {
+            const maxFee = parseInt(document.getElementById('feeSlider').value);
+            currentFeeFilter = maxFee;
+            
+            const filtered = currentResults.filter(partner => partner.fee <= maxFee);
+            displayResults(filtered);
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('feeSlider').value = 200;
+            document.getElementById('feeValue').textContent = '200';
+            currentFeeFilter = 200;
+            displayResults(currentResults);
+        }
+
+        // Update fee display
+        document.getElementById('feeSlider').addEventListener('input', function() {
+            document.getElementById('feeValue').textContent = this.value;
+        });
+
+        // Show contact modal
+        function showContact(partnerId) {
+            const partner = partners.find(p => p.id === partnerId);
+            if (partner) {
+                document.getElementById('modalContact').textContent = partner.contact;
+                document.getElementById('modal').style.display = 'flex';
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Add new partner
+        function addPartner() {
+            const name = document.getElementById('partnerName').value;
+            const fromCity = document.getElementById('newFromCity').value;
+            const toCity = document.getElementById('newToCity').value;
+            const fee = document.getElementById('fee').value;
+            const contact = document.getElementById('contact').value;
+
+            if (!name || !fromCity || !toCity || !fee || !contact) {
+                document.getElementById('addMessage').innerHTML = '<div class="success" style="background: #f8d7da; color: #721c24;">Please fill all fields</div>';
+                setTimeout(() => {
+                    document.getElementById('addMessage').innerHTML = '';
+                }, 3000);
+                return;
+            }
+
+            if (fee < 0) {
+                alert('Fee cannot be negative');
+                return;
+            }
+
+            const newPartner = {
+                id: partners.length + 1,
+                name: name,
+                from: fromCity,
+                to: toCity,
+                fee: parseFloat(fee),
+                contact: contact,
+                rating: 5.0
+            };
+
+            partners.push(newPartner);
+            
+            // Clear form
+            document.getElementById('partnerName').value = '';
+            document.getElementById('newFromCity').value = '';
+            document.getElementById('newToCity').value = '';
+            document.getElementById('fee').value = '';
+            document.getElementById('contact').value = '';
+
+            document.getElementById('addMessage').innerHTML = '<div class="success">✅ Partner added successfully! You can now be found in searches.</div>';
+            setTimeout(() => {
+                document.getElementById('addMessage').innerHTML = '';
+            }, 3000);
+
+            // Refresh current search if applicable
+            const fromSearch = document.getElementById('fromCity').value;
+            const toSearch = document.getElementById('toCity').value;
+            if (fromSearch && toSearch && fromSearch === fromCity && toSearch === toCity) {
+                searchPartners();
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        populateCities();
+        renderLists();
+        // Show some default partners
+        displayResults([]);
+    </script>
+</body>
+</html>
