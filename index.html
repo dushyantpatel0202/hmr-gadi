@@ -420,11 +420,23 @@
                 <b>कैसे काम करता है:</b><br>
                 - एक शहर से दूसरे शहर की यात्रा फ्री या बहुत कम कीमत पर करें।<br>
                 - यात्रा करना है तो अपनी जानकारी इंस्टाग्राम पर भेजें।<br>
-                - आप <b>5 रुपये/किमी</b> कमा सकते हैं या फ्री राइड देने पर <b>10 रुपये/किमी का क्रेडिट</b> मिलेगा।<br>
+                - आप <b>5 रुपये/किमी</b> कमा सकते हैं या फ्री राइड देने पर <b>10 रुपये/किमी के क्रेडिट</b> मिलेगा।<br>
                 - हम सेवा प्रदाताओं और ग्राहकों के बीच पुल हैं।<br>
                 - आपकी सुरक्षा के लिए, हम दोनों का आधार और वीडियो कॉल से सत्यापन करते हैं।<br>
                 <br>
                 <b>क्या आप डेवलपर हैं?</b> फ्रंटएंड/बैकएंड/फुल स्टैक या एंड्रॉइड डेवलपर हैं तो संपर्क करें!
+            </div>
+            <div class="cg-msg" style="display:none;">
+                <strong>✨ फोकट/कम दाम मं यात्रा बर ✨</strong><br>
+                हमर पायलट मं जुर जावव! जानकारी अपलोड करके, कॉपी करके, इंस्टाग्राम मं भेजव। हमन जांचबो अउ जोड़बो।<br><br>
+                <b>कइसे काम करथे:</b><br>
+                - एक सहर ले दूसर सहर फोकट या बहुत कम दाम मं जावव।<br>
+                - यात्रा करना हे त जानकारी इंस्टाग्राम मं भेजव।<br>
+                - आप <b>5 रुपिया/किमी</b> कमा सकथव, या फ्री राइड देबे त <b>10 रुपिया/किमी के क्रेडिट</b> पाबो।<br>
+                - हमन सेवा देइया अउ ग्राहक मन के बीच पुल हवन।<br>
+                - सुरता बर, आधार अउ वीडियो कॉल ले जांच करथन।<br>
+                <br>
+                <b>डेवलपर हव?</b> फ्रंटएंड/बैकएंड/फुल स्टैक या एंड्रॉइड डेवलपर हव त संपर्क करव!
             </div>
             <a id="instagramBtn" href="https://www.instagram.com/dushyantkumar0202" target="_blank" class="instagram-link">📸 Follow & DM on Instagram</a>
         </div>
@@ -449,13 +461,23 @@
             <div class="form-group"><label>Full Name</label><input type="text" id="personName" placeholder="Your name"></div>
             <div class="form-group"><label>Type</label>
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 5px;">
-                    <label style="font-weight:500;"><input type="radio" name="userType" value="Customer"> 🧑‍🦱 Customer</label>
-                    <label style="font-weight:500;"><input type="radio" name="userType" value="Provider"> 🚗 Provider</label>
+                    <label style="font-weight:500;">
+                        <input type="radio" name="userType" value="Customer"> 🧑‍🦱 Customer 
+                        <span class="customer-explain-en" style="font-weight:400;color:#888;">(wants to sit and travel)</span>
+                        <span class="customer-explain-hi" style="font-weight:400;color:#888;display:none;">(जो बैठ के जाना चाहता है)</span>
+                        <span class="customer-explain-cg" style="font-weight:400;color:#888;display:none;">(जऊन बइठ के जाय चाहथे)</span>
+                    </label>
+                    <label style="font-weight:500;">
+                        <input type="radio" name="userType" value="Provider"> 🚗 Provider 
+                        <span class="provider-explain-en" style="font-weight:400;color:#888;">(wants to take others)</span>
+                        <span class="provider-explain-hi" style="font-weight:400;color:#888;display:none;">(जो बैठा के ले जाना चाहता है)</span>
+                        <span class="provider-explain-cg" style="font-weight:400;color:#888;display:none;">(जऊन बइठा के ले जाय चाहथे)</span>
+                    </label>
                 </div>
             </div>
-            <div class="form-group"><label>Start City</label><input type="text" id="startCity" placeholder="e.g., Raipur" list="cityDatalist"></div>
-            <div class="form-group"><label>End City</label><input type="text" id="endCity" placeholder="Destination" list="cityDatalist"></div>
-            <div class="form-group"><label>Distance (km)</label><input type="number" id="distance" placeholder="km"></div>
+            <div class="form-group"><label>Start City</label><input type="text" id="startCity" placeholder="e.g., Raipur" list="cityDatalist" inputmode="text" autocomplete="on"></div>
+            <div class="form-group"><label>End City</label><input type="text" id="endCity" placeholder="Destination" list="cityDatalist" inputmode="text" autocomplete="on"></div>
+            <div class="form-group"><label>Distance (km) <span style="font-weight:400;color:#888;">(optional)</span></label><input type="number" id="distance" placeholder="km (optional)"></div>
             <div class="form-group"><label>Vehicle Type</label>
                 <select id="vehicleType">
                     <option value="">Select</option><option>2 Wheeler</option><option>4 Wheeler</option><option>Other</option>
@@ -471,7 +493,7 @@
                 <div class="form-group"><label>How many persons to add?</label><input id="personCount" type="number" min="1" value="1"></div>
             </div>
             <div class="form-group"><label>Mobile Number</label><input type="text" id="mobile" placeholder="WhatsApp / Mobile"></div>
-            <div class="form-group"><label>Day</label><select id="day"><option value="">Select</option><option>Today</option><option>Tomorrow</option></select></div>
+            <div class="form-group"><label for="day">Day</label><input type="date" id="day" name="day" style="width:100%;"></div>
             <div class="form-group"><label>Timing</label>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <select id="timingHour" style="width:75px;"><option value="">Hour</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
@@ -702,19 +724,29 @@
     function showContact(id) { let p=partners.find(x=>x.id===id); if(p){ document.getElementById('modalContact').innerText=p.contact; document.getElementById('modal').style.display='flex'; } }
     function closeModal() { document.getElementById('modal').style.display='none'; }
 
-    function initToggles() {
-        const nightBtn = document.getElementById('nightToggleMobile');
-        const hindiBtn = document.getElementById('hindiToggleMobile');
-        nightBtn?.addEventListener('click', () => { document.body.classList.toggle('night-mode'); });
-        let hindiActive = false;
-        const enDiv = document.querySelector('.en-msg');
-        const hiDiv = document.querySelector('.hi-msg');
-        hindiBtn?.addEventListener('click', () => {
-            hindiActive = !hindiActive;
-            if(hindiActive) { enDiv.style.display='none'; hiDiv.style.display='block'; document.getElementById('hindiToggleText').innerHTML='English'; }
-            else { enDiv.style.display='block'; hiDiv.style.display='none'; document.getElementById('hindiToggleText').innerHTML='हिंदी'; }
-        });
+    // --- Language toggle for English, Hindi, Chhattisgarhi ---
+    function setLanguageMode(mode) {
+        document.querySelectorAll('.customer-explain-en, .provider-explain-en').forEach(e => e.style.display = mode === 'en' ? 'inline' : 'none');
+        document.querySelectorAll('.customer-explain-hi, .provider-explain-hi').forEach(e => e.style.display = mode === 'hi' ? 'inline' : 'none');
+        document.querySelectorAll('.customer-explain-cg, .provider-explain-cg').forEach(e => e.style.display = mode === 'cg' ? 'inline' : 'none');
+        document.querySelector('.en-msg').style.display = mode === 'en' ? 'block' : 'none';
+        document.querySelector('.hi-msg').style.display = mode === 'hi' ? 'block' : 'none';
+        let cgMsg = document.querySelector('.cg-msg');
+        if (cgMsg) cgMsg.style.display = mode === 'cg' ? 'block' : 'none';
     }
+    const nightBtn = document.getElementById('nightToggleMobile');
+    nightBtn?.addEventListener('click', () => { document.body.classList.toggle('night-mode'); });
+    const hindiToggle = document.getElementById('hindiToggleMobile');
+    let langModes = ['en', 'hi', 'cg'];
+    let langLabels = { en: 'हिंदी', hi: 'छत्तीसगढ़ी', cg: 'English' };
+    let langIndex = 0;
+    hindiToggle?.addEventListener('click', function() {
+        langIndex = (langIndex + 1) % langModes.length;
+        const mode = langModes[langIndex];
+        setLanguageMode(mode);
+        document.getElementById('hindiToggleText').textContent = langLabels[mode];
+    });
+    setLanguageMode('en');
     document.getElementById('vehicleType')?.addEventListener('change', function(){ document.getElementById('otherVehicleGroup').style.display = this.value === 'Other' ? 'block' : 'none'; });
     document.getElementById('feeSlider')?.addEventListener('input', function(){ document.getElementById('feeValue').innerText=this.value; });
     document.getElementById('uploadTripBtn')?.addEventListener('click', uploadTripAndRedirect);
